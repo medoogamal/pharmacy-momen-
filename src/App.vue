@@ -255,7 +255,7 @@ export default {
 
     // Clear the input fields after adding a new drug
     this.newDrugName = "";
-    this.newDrugCount = 0;
+    this.newDrugCount = 1;
     this.saveDrugsToLocalStorage();
   }
 },
