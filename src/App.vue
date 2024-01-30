@@ -37,34 +37,47 @@
   <div :class="search ? 'pt-[21%]' : ''">
     <!-- Display drugs from local storage -->
     <div
-      v-for="(drug, index) in filteredDrugs"
-      :key="index"
-      class="flex items-center justify-between border p-2"
-    >
-      <label :for="'drug' + index" class="block capitalize">{{ drug.name }}</label>
-      <div class="flex items-center gap-3">
-        <button
-          @click="decrementValue(index)"
-          class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
-        >
-          -
-        </button>
-        <input
-          :type="drug.type"
-          :name="'drug' + index"
-          :id="'drug' + index"
-          :min="0"
-          v-model="drug.value"
-          class="border border-black w-[70px] rounded py-1 px-3 block"
-        />
-        <button
-          @click="incrementValue(index)"
-          class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
-        >
-          +
-        </button>
-      </div>
+    v-for="(drug, index) in filteredDrugs"
+    :key="index"
+    class="flex items-center justify-between border p-2"
+  >
+    <label :for="'drug' + index" class="block capitalize">{{ drug.name }}</label>
+    <div class="flex items-center gap-3">
+      <!-- Add edit button and call editDrug method -->
+      <button
+        @click="editDrug(index)"
+        class="bg-blue-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
+      >
+        Edit
+      </button>
+      <button
+        @click="deleteDrug(index)"
+        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
+      >
+        Delete
+      </button>
+      <button
+        @click="decrementValue(index)"
+        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
+      >
+        -
+      </button>
+      <input
+        :type="drug.type"
+        :name="'drug' + index"
+        :id="'drug' + index"
+        :min="0"
+        v-model="drug.value"
+        class="border border-black w-[70px] rounded py-1 px-3 block"
+      />
+      <button
+        @click="incrementValue(index)"
+        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
+      >
+        +
+      </button>
     </div>
+  </div>
 
     <div
       class="flex flex-col sm:flex-row items-center justify-between border p-2"
@@ -197,6 +210,32 @@ export default {
     incrementNewDrugCount() {
       this.newDrugCount++;
     },
+    editDrug(index) {
+      // Get the drug to be edited
+      const drugToEdit = this.drugs[index];
+
+      // Prompt the user for the new drug name
+      const newDrugName = window.prompt("ادخل اسم الدواء الجديد:", drugToEdit.name);
+
+      if (newDrugName !== null) {
+        // Update the drug name
+        drugToEdit.name = newDrugName;
+
+        // Save the updated drugs array to local storage
+        this.saveDrugsToLocalStorage();
+      }
+    },
+
+    deleteDrug(index) {
+      const confirmDelete = window.confirm("هل أنت متأكد من حذف هذا الدواء؟");
+
+      if (confirmDelete) {
+        // Remove the drug at the specified index
+        this.drugs.splice(index, 1);
+        // Save the updated drugs array to local storage
+        this.saveDrugsToLocalStorage();
+      }
+    },
 
     loadDrugsFromLocalStorage() {
       const storedDrugs = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -212,7 +251,7 @@ export default {
     },
     clearLocalStorage() {
     // Show a confirmation dialog before clearing local storage
-    const confirmDelete = window.confirm("!!!!؟هل انت متاكد من انك تريد حئف كل الادويه الحالية");
+    const confirmDelete = window.confirm("هل انت متاكد من انك تريد حئف كل الادويه الحالية");
     
     if (confirmDelete) {
       // Clear all items in local storage
