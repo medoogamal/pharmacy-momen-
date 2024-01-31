@@ -37,47 +37,55 @@
   <div :class="search ? 'pt-[21%]' : ''">
     <!-- Display drugs from local storage -->
     <div
-    v-for="(drug, index) in filteredDrugs"
-    :key="index"
-    class="flex items-center justify-between border p-2"
-  >
-    <label :for="'drug' + index" class="block capitalize">{{ drug.name }}</label>
-    <div class="flex items-center gap-3">
-      <!-- Add edit button and call editDrug method -->
-      <button
-        @click="editDrug(index)"
-        class="bg-blue-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
-      >
-        Edit
-      </button>
-      <button
-        @click="deleteDrug(index)"
-        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
-      >
-        Delete
-      </button>
-      <button
-        @click="decrementValue(index)"
-        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl "
-      >
-        -
-      </button>
-      <input
-        :type="drug.type"
-        :name="'drug' + index"
-        :id="'drug' + index"
-        :min="0"
-        v-model="drug.value"
-        class="border border-black w-[70px] rounded py-1 px-3 block"
-      />
-      <button
-        @click="incrementValue(index)"
-        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
-      >
-        +
-      </button>
-    </div>
+  v-for="(drug, index) in filteredDrugs"
+  :key="index"
+  :class="{ 'bg-gray-500': drug.bookmarked }"  
+  class="flex items-center justify-between border p-2"
+>
+  <label :for="'drug' + index" class="block capitalize">{{ drug.name }}</label>
+  <div class="flex items-center gap-3">
+    <!-- Add bookmark button with click event -->
+    <button
+      @click="toggleBookmark(index)"
+      class="bg-yellow-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
+    >
+      {{ drug.bookmarked ? 'Remove Bookmark' : 'Add Bookmark' }}
+    </button>
+    <!-- Add edit button and call editDrug method -->
+    <button
+      @click="editDrug(index)"
+      class="bg-blue-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
+    >
+      Edit
+    </button>
+    <button
+      @click="deleteDrug(index)"
+      class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
+    >
+      Delete
+    </button>
+    <button
+      @click="decrementValue(index)"
+      class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
+    >
+      -
+    </button>
+    <input
+      :type="drug.type"
+      :name="'drug' + index"
+      :id="'drug' + index"
+      :min="0"
+      v-model="drug.value"
+      class="border border-black w-[70px] rounded py-1 px-3 block"
+    />
+    <button
+      @click="incrementValue(index)"
+      class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
+    >
+      +
+    </button>
   </div>
+</div>
 
     <div
       class="flex flex-col sm:flex-row items-center justify-between border p-2"
@@ -209,6 +217,19 @@ export default {
     },
     incrementNewDrugCount() {
       this.newDrugCount++;
+    },
+    toggleBookmark(index) {
+      const drug = this.drugs[index];
+      const action = drug.bookmarked ? 'Remove' : 'Add';
+
+      const confirmAction = window.confirm(`Do you want to ${action} bookmark for ${drug.name}?`);
+
+      if (confirmAction) {
+        // Toggle the 'bookmarked' property for the selected drug
+        drug.bookmarked = !drug.bookmarked;
+        // Save the updated drugs array to local storage
+        this.saveDrugsToLocalStorage();
+      }
     },
     editDrug(index) {
       // Get the drug to be edited
