@@ -218,18 +218,11 @@ export default {
     incrementNewDrugCount() {
       this.newDrugCount++;
     },
-    toggleBookmark(index) {
-      const drug = this.drugs[index];
-      const action = drug.bookmarked ? 'Remove' : 'Add';
-
-      const confirmAction = window.confirm(`Do you want to ${action} bookmark for ${drug.name}?`);
-
-      if (confirmAction) {
-        // Toggle the 'bookmarked' property for the selected drug
-        drug.bookmarked = !drug.bookmarked;
-        // Save the updated drugs array to local storage
-        this.saveDrugsToLocalStorage();
-      }
+      toggleBookmark(index) {
+      // Toggle the 'bookmarked' property for the selected drug
+      this.drugs[index].bookmarked = !this.drugs[index].bookmarked;
+      // Save the updated drugs array to local storage
+      this.saveDrugsToLocalStorage();
     },
     editDrug(index) {
       // Get the drug to be edited
