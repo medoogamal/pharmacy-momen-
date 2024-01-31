@@ -58,7 +58,7 @@
       </button>
       <button
         @click="decrementValue(index)"
-        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl md:block hidden"
+        class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl "
       >
         -
       </button>
