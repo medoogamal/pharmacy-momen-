@@ -99,6 +99,12 @@
       />
       <div class="flex items-center gap-3">
         <button
+    @click="toggleNewDrugBookmark"
+    class="bg-yellow-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
+  >
+    {{ newDrugBookmarked ? 'Remove Bookmark' : 'Add Bookmark' }}
+  </button>
+        <button
           @click="decrementNewDrugCount"
           class="bg-red-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
         >
@@ -153,6 +159,7 @@ export default {
       drugs: [], // Initialize drugs as an empty array
       newDrugName: "",
       newDrugCount: 1,
+      newDrugBookmarked: false,
       search: false,
       searchQuery: "",
     };
@@ -207,6 +214,10 @@ export default {
         this.drugs[index].value--;
       }
     },
+    toggleNewDrugBookmark() {
+      // Toggle the bookmark status for the newly added drug
+      this.newDrugBookmarked = !this.newDrugBookmarked;
+    },
     incrementValue(index) {
       this.drugs[index].value++;
     },
@@ -218,7 +229,7 @@ export default {
     incrementNewDrugCount() {
       this.newDrugCount++;
     },
-      toggleBookmark(index) {
+    toggleBookmark(index) {
       // Toggle the 'bookmarked' property for the selected drug
       this.drugs[index].bookmarked = !this.drugs[index].bookmarked;
       // Save the updated drugs array to local storage
@@ -285,13 +296,14 @@ export default {
     },
 
   addNewDrug() {
-  if (this.newDrugName && this.newDrugCount >= 0) {
-    // Create a new drug object
-    const newDrug = {
-      name: this.newDrugName,
-      type: "text",
-      value: this.newDrugCount,
-    };
+    if (this.newDrugName && this.newDrugCount >= 0) {
+        // Create a new drug object with bookmark status
+        const newDrug = {
+          name: this.newDrugName,
+          type: "text",
+          value: this.newDrugCount,
+          bookmarked: this.newDrugBookmarked,
+        };
 
     // Find the correct index to insert the new drug in alphabetical order
     const insertIndex = this.drugs.findIndex(
