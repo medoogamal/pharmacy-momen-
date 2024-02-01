@@ -236,20 +236,36 @@ export default {
       this.saveDrugsToLocalStorage();
     },
     editDrug(index) {
-      // Get the drug to be edited
-      const drugToEdit = this.drugs[index];
+  // Get the drug to be edited
+  const drugToEdit = this.drugs[index];
 
-      // Prompt the user for the new drug name
-      const newDrugName = window.prompt("ادخل اسم الدواء الجديد:", drugToEdit.name);
+  // Prompt the user for the new drug name
+  const newDrugName = window.prompt("ادخل اسم الدواء الجديد:", drugToEdit.name);
 
-      if (newDrugName !== null) {
-        // Update the drug name
-        drugToEdit.name = newDrugName;
+  if (newDrugName !== null) {
+    // Remove the drug from its current position in the array
+    this.drugs.splice(index, 1);
 
-        // Save the updated drugs array to local storage
-        this.saveDrugsToLocalStorage();
-      }
-    },
+    // Update the drug name
+    drugToEdit.name = newDrugName;
+
+    // Find the correct index to insert the edited drug in alphabetical order
+    const insertIndex = this.drugs.findIndex(
+      (drug) => drug.name.localeCompare(newDrugName) > 0
+    );
+
+    // If insertIndex is -1, it means the edited drug should be added at the end
+    if (insertIndex === -1) {
+      this.drugs.push(drugToEdit);
+    } else {
+      // Insert the edited drug at the correct index
+      this.drugs.splice(insertIndex, 0, drugToEdit);
+    }
+
+    // Save the updated drugs array to local storage
+    this.saveDrugsToLocalStorage();
+  }
+},
 
     deleteDrug(index) {
       const confirmDelete = window.confirm("هل أنت متأكد من حذف هذا الدواء؟");
