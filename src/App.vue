@@ -16,7 +16,6 @@
         <h1 class="text-white text-lg font-bold">Kitchen Girl</h1>
         <img src="/nada.jpg" class="w-[60px]  rounded-full" alt="">
         <img src="/r.jpg" class="w-[60px]  rounded-full" alt="">
-        <img src="/h.jpg" class="w-[60px]  rounded-full" alt="">
       </div>
     </div>
       
