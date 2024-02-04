@@ -1,6 +1,7 @@
 <template>
   <header class="bg-blue-500 p-4" :class="search ? 'fixed w-full' : ''">
     <div class="container mx-auto flex items-center justify-between">
+    <div class="flex items-center justify-between">
       <div class="flex items-center space-x-4" v-if="!search">
         <img
           src="/247-2471138_pharmacy-symbol-hd-png-download.png"
@@ -11,6 +12,15 @@
           M Pharmacy صيدليه د/مؤمن لطفي
         </h1>
       </div>
+      <div class="flex items-center gap-2 ml-[550px]">
+        <h1 class="text-white text-lg font-bold">Kitchen Girl</h1>
+        <img src="/nada.jpg" class="w-[60px]  rounded-full" alt="">
+        <img src="/r.jpg" class="w-[60px]  rounded-full" alt="">
+        <img src="/h.jpg" class="w-[60px]  rounded-full" alt="">
+      </div>
+    </div>
+      
+
       <div
         @click="openSearch"
         class="fixed bottom-20 text-white p-[10px] rounded-xl bg-green-500 text-xl font-semibold"
