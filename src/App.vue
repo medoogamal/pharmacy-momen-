@@ -32,7 +32,7 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search"
-          class="px-4 py-2 rounded-lg"
+          class="px-4 py-2 rounded-lg" 
         />
         <div
           @click="closeSearch"
