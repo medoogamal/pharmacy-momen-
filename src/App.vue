@@ -12,12 +12,6 @@
           M Pharmacy صيدليه د/مؤمن لطفي
         </h1>
       </div>
-      <div class="flex items-center gap-2 ml-[550px]">
-        <h1 class="text-white text-lg font-bold">Kitchen Girl</h1>
-        <img src="/h3.jpg" class="w-[60px]  rounded-full" alt="">
-        <img src="/h.jpg" class="w-[60px]  rounded-full" alt="">
-        <img src="/h1.jpg" class="w-[60px]  rounded-full" alt="">
-      </div>
     </div>
       
 
