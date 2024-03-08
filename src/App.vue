@@ -12,9 +12,8 @@
           M Pharmacy صيدليه د/مؤمن لطفي
         </h1>
       </div>
-    </div>
-      
 
+    </div>
       <div
         @click="openSearch"
         class="fixed bottom-20 text-white p-[10px] rounded-xl bg-green-500 text-xl font-semibold"
@@ -26,7 +25,7 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search"
-          class="px-4 py-2 rounded-lg" 
+          class="px-4 py-2 rounded-lg"
         />
         <div
           @click="closeSearch"
@@ -38,9 +37,12 @@
     </div>
   </header>
 
-  <div :class="search ? 'pt-[21%]' : ''">
+  <div :class="search ? 'pt-[21%]' : ''" >
     <!-- Display drugs from local storage -->
-    <div
+    <div id="drugsList">
+
+    
+  <div
   v-for="(drug, index) in filteredDrugs"
   :key="index"
   :class="{ 'bg-gray-500': drug.bookmarked }"  
@@ -49,12 +51,12 @@
   <label :for="'drug' + index" class="block capitalize">{{ drug.name }}</label>
   <div class="flex items-center gap-3">
     <!-- Add bookmark button with click event -->
-    <button
+    <!-- <button
       @click="toggleBookmark(index)"
       class="bg-yellow-500 py-2 px-3 rounded-lg text-white font-extrabold text-xl"
     >
       {{ drug.bookmarked ? 'Remove Bookmark' : 'Add Bookmark' }}
-    </button>
+    </button> -->
     <!-- Add edit button and call editDrug method -->
     <button
       @click="editDrug(index)"
@@ -90,7 +92,7 @@
     </button>
   </div>
 </div>
-
+</div>
     <div
       class="flex flex-col sm:flex-row items-center justify-between border p-2"
     >
@@ -154,6 +156,7 @@
 <script>
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import html2canvas from "html2canvas";
 
 const LOCAL_STORAGE_KEY = "pharmacyDrugs";
 
@@ -177,25 +180,28 @@ export default {
   },
   methods: {
     generatePDF() {
-      const pdf = new jsPDF();
+  // Get the filtered drugs array
+  const filteredDrugs = this.filteredDrugs;
 
-      // Filter drugs with a value greater than 0
-      const filteredDrugs = this.drugs.filter((drug) => drug.value > 0);
-      pdf.text("M Pharmacy | Dr.Momen Lotfy", 14, 10);
+  // Calculate the number of pages needed
+  const numPages = Math.ceil(filteredDrugs.length / 10);
 
-      // Define the table headers
-      const headers = [["Drug Name", "Value"]];
+  // Loop through each page
+  for (let i = 0; i < numPages; i++) {
+    // Slice the filtered drugs array to get a subset of drugs for this page
+    const drugsForPage = filteredDrugs.slice(i * 10, (i + 1) * 10);
 
-      // Extract data for the table from the filtered drugs
-      const data = filteredDrugs.map((drug) => [drug.name, drug.value]);
+    // Create a new instance of jsPDF for each page
+    const pdf = new jsPDF();
 
-      // Create the table with jsPDF-AutoTable
-      pdf.autoTable({
-        head: headers,
-        body: data,
-        startY: 15,
-        // Initial y-coordinate for the table
-      });
+    // Convert the HTML element containing the drugs list to canvas using html2canvas
+    html2canvas(document.getElementById("drugsList")).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+
+      // Add the canvas image to the PDF
+      pdf.addImage(imgData, "PNG", 10, 10, 180, 0);
+
+      // Save the PDF
       const date = new Date();
       const options = {
         weekday: "short",
@@ -204,8 +210,13 @@ export default {
         day: "numeric",
       };
       const formattedDate = date.toLocaleDateString(undefined, options);
-      pdf.save(`${formattedDate}.pdf`);
-    },
+      pdf.save(`${formattedDate}_page${i + 1}.pdf`);
+    });
+  }
+},
+
+
+
     openSearch() {
       this.search = true;
     },
